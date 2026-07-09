@@ -543,10 +543,9 @@ class PairHistManager
     if (mPlotSH) {
       mShKstarSpec = {ConfPairBinning.shKstar, "k* (GeV/#it{c})"};
       mYlm.initializeYlms();
-      // copy bin edges, stripping the leading VARIABLE_WIDTH (0) marker 
+      // copy bin edges, stripping the leading VARIABLE_WIDTH (0) marker
       mShCentEdges.assign(ConfPairBinning.shCentBins.value.begin() + 1, ConfPairBinning.shCentBins.value.end());
       mShKtEdges.assign(ConfPairBinning.shKtBins.value.begin() + 1, ConfPairBinning.shKtBins.value.end());
-
     }
 
     // transverse mass type
@@ -968,7 +967,7 @@ class PairHistManager
     }
     if (mPlotSH) {
       const int nJM = (mShLMax + 1) * (mShLMax + 1);
-      const int nCent = static_cast<int>(mShCentEdges.size()) - 1; // n edges -> n - 1 bins 
+      const int nCent = static_cast<int>(mShCentEdges.size()) - 1; // n edges -> n - 1 bins
       const int nKt = static_cast<int>(mShKtEdges.size()) - 1;
       mShYlmBuffer.assign(nJM, {});
 
@@ -980,9 +979,9 @@ class PairHistManager
         // folder name: mult_{low}_{high}
         const std::string centFolder = "mult_" + std::to_string(static_cast<int>(mShCentEdges[iCent])) +
                                        "_" + std::to_string(static_cast<int>(mShCentEdges[iCent + 1]));
-        for (int iKt = 0; iKt < nKt; ++iKt) { 
-          mShReal[iCent][iKt].resize(nJM); 
-          mShImag[iCent][iKt].resize(nJM); 
+        for (int iKt = 0; iKt < nKt; ++iKt) {
+          mShReal[iCent][iKt].resize(nJM);
+          mShImag[iCent][iKt].resize(nJM);
           // folder name: kT_{low*100}_{high*100}
           std::string ktFolder = "kT_";
           ktFolder += std::to_string(static_cast<int>(mShKtEdges[iKt] * 100.0));
@@ -1208,11 +1207,11 @@ class PairHistManager
     if (mPlotSH) {
       const int iCent = findShBin(mMult, mShCentEdges);
       const int iKt = findShBin(mKt, mShKtEdges);
-      if (iCent >= 0 && iKt >= 0) { 
+      if (iCent >= 0 && iKt >= 0) {
         mYlm.doYlmUpToL(mShLMax, mShOut, mShSide, mShLong, mShYlmBuffer.data());
         for (std::size_t i = 0; i < mShYlmBuffer.size(); ++i) {
           mShReal[iCent][iKt][i]->Fill(mShKv, std::real(mShYlmBuffer[i]));
-          mShImag[iCent][iKt][i]->Fill(mShKv, -std::imag(mShYlmBuffer[i])); 
+          mShImag[iCent][iKt][i]->Fill(mShKv, -std::imag(mShYlmBuffer[i]));
         }
       }
     }
@@ -1381,14 +1380,14 @@ class PairHistManager
 
   // Return the bin index for value given ascending bin edges, or -1 if out of range.
   // edges = {e0, e1, ..., eN} defines N bins [e0,e1), [e1,e2), ..., [e_{N-1},eN).
-  static int findShBin(double value, std::vector<double> const& edges) 
+  static int findShBin(double value, std::vector<double> const& edges)
   {
     static constexpr std::size_t MinEdgesForOneBin = 2;
-    if (edges.size() < MinEdgesForOneBin || value < edges.front() || value >= edges.back()) { 
+    if (edges.size() < MinEdgesForOneBin || value < edges.front() || value >= edges.back()) {
       return -1;
     }
-    for (std::size_t i = 0; i < edges.size() - 1; ++i) { 
-      if (value >= edges[i] && value < edges[i + 1]) { 
+    for (std::size_t i = 0; i < edges.size() - 1; ++i) {
+      if (value >= edges[i] && value < edges[i + 1]) {
         return static_cast<int>(i);
       }
     }
@@ -1469,7 +1468,6 @@ class PairHistManager
     return {static_cast<float>(kstar),
             static_cast<float>(fDKOut), static_cast<float>(fDKSide), static_cast<float>(fDKLong)};
   }
-
 
   o2::framework::HistogramRegistry* mHistogramRegistry = nullptr;
   bool mUsePdgMass = true;
@@ -1573,7 +1571,7 @@ class PairHistManager
   o2::framework::AxisSpec mShKstarSpec{{60, 0.0f, 0.3f}, "k* (GeV/#it{c})"}; // set in init()
 
   // kinematics computed in setPair(): axis value + 3 components feeding Ylm
-  float mShKv = 0.f;   // kstar (non-identical) or qinv (identical)
+  float mShKv = 0.f; // kstar (non-identical) or qinv (identical)
   float mShOut = 0.f;
   float mShSide = 0.f;
   float mShLong = 0.f;
@@ -1584,7 +1582,6 @@ class PairHistManager
   std::vector<std::complex<double>> mShYlmBuffer; // reused, allocated once
   std::vector<double> mShCentEdges;
   std::vector<double> mShKtEdges;
-
 
   o2::analysis::femto::SpherHarMath mYlm{};
 
